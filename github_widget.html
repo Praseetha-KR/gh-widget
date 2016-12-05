@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Github Widget</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-size: 16px;
+            line-height: 24px;
+            font-family: sans-serif;
+        }
+        .gw {
+            width: 100%;
+            background-color: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 0.2em;
+            overflow: hidden;
+        }
+        .gw__link {
+            text-decoration: none;
+            color: #333;
+        }
+        .gw__user {
+            overflow: hidden;
+            float: none;
+            position: relative;
+        }
+        .gw__user__pic {
+            float: left;
+            width: 5em;
+            height: 5em;
+            position: relative;
+            z-index: 1;
+        }
+        .gw__user__info {
+            float: left;
+            width: 100%;
+            height: 5em;
+            margin-left: -5em;
+            padding-left: 5.5em;
+            padding-top: 1em;
+            position: relative;
+        }
+        .gw__avatar {
+            height: 100%;
+            width: 100%;
+        }
+        .gw__username {
+            font-size: 0.8em;
+            color: #9b9fa2;
+        }
+        .gw__status {
+            position: relative;
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+            background: #f5f5f5;
+        }
+        .gw__status__box {
+            display: table-cell;
+            padding: 0.2em 0.5em;
+        }
+        .gw__status__count {
+            font-size: 1.2em;
+        }
+        .gw__status__label {
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="github-widget"></div>
+
+    <script>
+        /**
+         * getUserQuery get profile name to be rendered from url q param
+         * @return {String} [github profile name]
+         */
+        function getUserQuery(url) {
+            var query = url.split("?q=").slice(-1).pop();
+            return query;
+        }
+
+
+        /**
+         * renderGWSkeletonTpl renders widget's DOM template skeleton
+         * @param  {String} node [container node class]
+         */
+        function renderSkeletonTpl(node, widgetClass) {
+            var prefix = widgetClass;
+            var tpl = `<div class="${prefix}">
+                <a class="${prefix}__link" href="#" target="_blank">
+                    <div class="${prefix}__user">
+                        <div class="${prefix}__user__pic">
+                            <img class="${prefix}__avatar" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="avatar">
+                        </div>
+                        <div class="${prefix}__user__info">
+                            <div class="${prefix}__name"></div>
+                            <div class="${prefix}__username"></div>
+                        </div>
+                    </div>
+                    <div class="${prefix}__status">
+                        <div class="${prefix}__status__box">
+                            <div class="${prefix}__repos ${prefix}__status__count"></div>
+                            <div class="${prefix}__status__label">Repos</div>
+                        </div>
+                        <div class="${prefix}__status__box">
+                            <div class="${prefix}__followers ${prefix}__status__count"></div>
+                            <div class="${prefix}__status__label">Followers</div>
+                        </div>
+                        <div class="${prefix}__status__box">
+                            <div class="${prefix}__following ${prefix}__status__count"></div>
+                            <div class="${prefix}__status__label">Following</div>
+                        </div>
+                    </div>
+                </a>
+            </div>`;
+            var widget = document.querySelector(node);
+            widget.innerHTML = tpl;
+            return;
+        }
+
+
+        /**
+         * renderData maps api result data to GW template
+         * @param  {JSON} data   [JSON data from github]
+         */
+        function renderData(data, widgetClass) {
+            var $ = document.querySelector,
+                doc = document;
+
+            var widget = $.call(doc, '.' + widgetClass);
+
+            var widgetTextData = [
+                {
+                    value: data.name,
+                    class: `${widgetClass}__name`
+                },
+                {
+                    value: '@' + data.login,
+                    class: `${widgetClass}__username`
+                },
+                {
+                    value: data.public_repos,
+                    class: `${widgetClass}__repos`
+                },
+                {
+                    value: data.followers,
+                    class: `${widgetClass}__followers`
+                },
+                {
+                    value: data.following,
+                    class: `${widgetClass}__following`
+                }
+            ];
+            var widgetAttrData = [
+                {
+                    attr: 'src',
+                    value: data.avatar_url,
+                    class: `${widgetClass}__avatar`
+                },
+                {
+                    attr: 'href',
+                    value: data.avatar_url,
+                    class: `${widgetClass}__link`
+                }
+            ];
+
+            widgetTextData.map(function(item) {
+                var textnode = $.call(doc, '.' + item.class);
+                textnode.innerHTML = item.value;
+            });
+
+            widgetAttrData.map(function(item) {
+                var textnode = $.call(doc, '.' + item.class);
+                textnode[item.attr] = item.value;
+            });
+            return;
+        }
+
+        /**
+         * listener function parses api result & call render fn
+         */
+        function listener() {
+            var widgetClass = 'gw';
+            var res = JSON.parse(this.response);
+            renderData(res, widgetClass);
+            return;
+        }
+
+        /**
+         * getGithubProfile makes AJAX call to get user profile data, on load binds to listener fn
+         * @param {String} [username] [github username]
+         */
+        function fetchGithubProfile(username) {
+            var req = new XMLHttpRequest();
+            req.addEventListener('load', listener);
+            req.open('GET', 'https://api.github.com/users/' + username);
+            req.send();
+            return;
+        }
+
+
+        var username = getUserQuery(location.href);
+        if (username) {
+            renderSkeletonTpl('.github-widget', 'gw');
+            fetchGithubProfile(username);
+        }
+
+    </script>
+</body>
+</html>
