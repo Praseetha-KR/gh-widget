@@ -1,0 +1,81 @@
+/**
+ * gh-widget for rendering github profile
+ * v0.0.1
+ */
+
+.gh-widget {
+    font-size: 16px;
+    line-height: 24px;
+    font-family: sans-serif;
+    background-color: red;
+
+    [class^='ghw__'] {
+        box-sizing: border-box;
+    }
+    .ghw {
+        width: 100%;
+        background-color: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 0.2em;
+        overflow: hidden;
+        &__link {
+            text-decoration: none;
+            color: #333;
+        }
+        &__user {
+            overflow: hidden;
+            float: none;
+            position: relative;
+            &__pic {
+                float: left;
+                width: 5em;
+                height: 5em;
+                position: relative;
+                z-index: 1;
+            }
+            &__info {
+                float: left;
+                width: 100%;
+                height: 5em;
+                margin-left: -5em;
+                padding-left: 5.5em;
+                padding-top: 1em;
+                position: relative;
+            }
+        }
+        &__logo {
+            position: absolute;
+            right: 0.5em;
+            top: 0.5em;
+
+            .octicon {
+                fill: #bbb;
+            }
+        }
+        &__avatar {
+            height: 100%;
+            width: 100%;
+        }
+        &__username {
+            font-size: 0.8em;
+            color: #9b9fa2;
+        }
+        &__status {
+            position: relative;
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+            background: #f5f5f5;
+            &__item {
+                display: table-cell;
+                padding: 0.2em 0.5em;
+            }
+            &__count {
+                font-size: 1.2em;
+            }
+            &__label {
+                font-size: 0.8em;
+            }
+        }
+    }
+}
