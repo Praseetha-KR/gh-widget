@@ -1,0 +1,36 @@
+{
+  "name": "gh-widget",
+  "version": "0.0.1",
+  "description": "A minimal widget to show Github profile status",
+  "main": "gh-widget.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praseetha-KR/gh-widget.git"
+  },
+  "keywords": [
+    "github",
+    "widget"
+  ],
+  "author": "Praseetha-KR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Praseetha-KR/gh-widget/issues"
+  },
+  "homepage": "https://github.com/Praseetha-KR/gh-widget#readme",
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-util": "^3.0.7",
+    "run-sequence": "^1.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  }
+}
