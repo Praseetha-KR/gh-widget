@@ -35,7 +35,7 @@ gulp.task('scss', () => {
     return bundle;
 });
 
-function compile(watch) {
+function compilejs(watch) {
     var bundler = watchify(browserify(paths.js, {}).transform(babelify));
 
     function rebundle() {
@@ -62,7 +62,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('js', () => {
-    return compile(true);
+    compilejs(true);
 });
 
 gulp.task('watch', () => {
